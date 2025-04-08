@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  smtp:
+    image: rnwood/smtp4dev:latest
+    ports:
+      - "5001:80"       # Changed host port to 5001
+      - "2526:25"       # Changed host port to 2526
+  db:
+    image: postgres
+    ports:
+      - 5433:5432       # Changed host port to 5433
+    volumes:
+      - './postgres_data:/var/lib/postgresql/data'
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: elevar
+      PGDATA: /var/lib/postgresql/data/pgdata
+
+  mongodb:
+    image: mongo
+    ports:
+      - 27018:27017
+    volumes:
+      - './mongodb_data:/data/db'
+      - './mongodb_init:/docker-entrypoint-initdb.d'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
