@@ -33,8 +33,8 @@ elevar-local/
     ```
 
 3. Access the databases:
-    - **MongoDB**: Connect to `localhost:27017`.
-    - **PostgreSQL**: Connect to `localhost:5432`.
+    - **MongoDB**: Connect to `localhost:27018`.
+    - **PostgreSQL**: Connect to `localhost:5433`.
 
 ## Configuration
 
