@@ -29,3 +29,13 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=password
+
+  verdaccio:
+    image: verdaccio/verdaccio:latest
+    ports:
+      - "4873:4873"
+    volumes:
+      - './verdaccio/storage:/verdaccio/storage'
+      - './verdaccio/conf:/verdaccio/conf'
+    environment:
+      - VERDACCIO_AUTH_JWT_SECRET=your_jwt_secret

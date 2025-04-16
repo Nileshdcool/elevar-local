@@ -137,3 +137,5 @@ dist
 /mongodb_data
 /mongodb_init
 /postgres_data
+/verdaccio/storage
+/verdaccio/conf
