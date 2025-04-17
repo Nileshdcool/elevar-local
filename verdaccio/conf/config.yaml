@@ -1,0 +1,26 @@
+storage: /verdaccio/storage
+auth:
+  jwt:
+    enabled: true
+    secret: your_jwt_secret
+    sign:
+      expiresIn: 1h
+    verify:
+      algorithms: ["HS256"]
+uplinks:
+  npmjs:
+    url: https://registry.npmjs.org/
+packages:
+  '@*/*':
+    access: $authenticated
+    publish: $authenticated
+    proxy: npmjs
+  '**':
+    access: $authenticated
+    publish: $authenticated
+    proxy: npmjs
+middlewares:
+  audit:
+    enabled: true
+logs:
+  - { type: stdout, format: pretty, level: http }
