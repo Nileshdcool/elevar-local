@@ -39,3 +39,15 @@ services:
       - './verdaccio/conf:/verdaccio/conf'
     environment:
       - VERDACCIO_AUTH_JWT_SECRET=your_jwt_secret
+
+  minio:
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001" # Console port
+    volumes:
+      - './minio_data:/data'
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"

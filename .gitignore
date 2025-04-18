@@ -140,3 +140,4 @@ dist
 /verdaccio/storage
 # /verdaccio/conf
 /verdaccio/conf/htpasswd
+/minio_data
