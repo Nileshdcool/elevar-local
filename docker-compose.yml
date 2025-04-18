@@ -1,35 +1,39 @@
 version: '3.8'
 
 services:
+  # SMTP Service
   smtp:
     image: rnwood/smtp4dev:latest
     ports:
-      - "5001:80"       # Changed host port to 5001
-      - "2526:25"       # Changed host port to 2526
+      - "5001:80"
+      - "2526:25"
+
+  # PostgreSQL Database Service
   db:
     image: postgres
     ports:
-      - 5433:5432       # Changed host port to 5433
+      - "5433:5432"
     volumes:
       - './postgres_data:/var/lib/postgresql/data'
-
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: elevar
       PGDATA: /var/lib/postgresql/data/pgdata
 
+  # MongoDB Database Service
   mongodb:
     image: mongo
     ports:
-      - 27018:27017
+      - "27018:27017"
     volumes:
       - './mongodb_data:/data/db'
       - './mongodb_init:/docker-entrypoint-initdb.d'
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=password
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
 
+  # Verdaccio Private NPM Registry Service
   verdaccio:
     image: verdaccio/verdaccio:latest
     ports:
@@ -38,16 +42,52 @@ services:
       - './verdaccio/storage:/verdaccio/storage'
       - './verdaccio/conf:/verdaccio/conf'
     environment:
-      - VERDACCIO_AUTH_JWT_SECRET=your_jwt_secret
+      VERDACCIO_AUTH_JWT_SECRET: your_jwt_secret
 
+  # MinIO Object Storage Service
   minio:
     image: minio/minio:latest
     ports:
       - "9000:9000"
-      - "9001:9001" # Console port
+      - "9001:9001"
     volumes:
       - './minio_data:/data'
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
     command: server /data --console-address ":9001"
+
+  # Grafana Monitoring and Visualization Service
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3500:3500"
+    volumes:
+      - './grafana_data:/var/lib/grafana'
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+
+  # Prometheus Monitoring Service
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - './prometheus/prometheus.yml:/etc/prometheus/prometheus.yml'
+
+  # Loki Log Aggregation Service
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    volumes:
+      - './loki/config.yml:/etc/loki/config.yml'
+
+  # Promtail Log Collector
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - '/var/log:/var/log'
+      - './loki/promtail-config.yml:/etc/promtail/config.yml'
+    command: -config.file=/etc/promtail/config.yml
