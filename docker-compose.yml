@@ -91,3 +91,22 @@ services:
       - '/var/log:/var/log'
       - './loki/promtail-config.yml:/etc/promtail/config.yml'
     command: -config.file=/etc/promtail/config.yml
+
+  # Redis Cache Service
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - './redis_data:/data'
+    command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    ports:
+      - "8081:8081"
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+
+volumes:
+  redis_data:

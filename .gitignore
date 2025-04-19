@@ -142,3 +142,4 @@ dist
 /verdaccio/conf/htpasswd
 /minio_data
 /grafana_data
+/redis_data
