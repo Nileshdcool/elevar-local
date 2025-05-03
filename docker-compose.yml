@@ -108,5 +108,33 @@ services:
     environment:
       - REDIS_HOSTS=local:redis:6379
 
+  # LDAP Server
+  ldap:
+    image: osixia/openldap:latest
+    container_name: ldap
+    ports:
+      - "389:389"
+      - "636:636"
+    environment:
+      LDAP_ORGANISATION: "Example Inc."
+      LDAP_DOMAIN: "example.org"
+      LDAP_ADMIN_PASSWORD: "admin"
+
+  # phpLDAPadmin for LDAP Management
+  phpldapadmin:
+    image: osixia/phpldapadmin:latest
+    container_name: phpldapadmin
+    ports:
+      - "6443:443"
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: ldap
+    depends_on:
+      - ldap
+
 volumes:
   redis_data:
+  postgres_data:
+  mongodb_data:
+  verdaccio_storage:
+  grafana_data:
+  minio_data:
